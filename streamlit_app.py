@@ -14,8 +14,15 @@ st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 # Cấu hình trang
 st.set_page_config(page_title="STEM Lesson Plan Generator", layout="wide")
 
-st.title("🛠️ Chương trình hỗ trợ tạo Prompt thiết kế bài học STEM ")
-st.info("Ứng dụng hỗ trợ giáo viên soạn thảo kế hoạch bài dạy STEM theo chuẩn Bộ GD&ĐT.")
+# Logo và tiêu đề
+logo_col, title_col = st.columns([1, 4])
+
+with logo_col:
+    st.image("images/logo.png", width=150)
+
+with title_col:
+    st.title("🛠️ Chương trình hỗ trợ tạo Prompt thiết kế bài học STEM ")
+    st.info("Ứng dụng hỗ trợ giáo viên soạn thảo kế hoạch bài dạy STEM theo quy định của Bộ GD&ĐT.")
 
 # --- CẤU HÌNH CHUNG ---
 st.header("⚙️ Cấu hình chung")
@@ -40,7 +47,7 @@ col1, col2 = st.columns([1, 1])
 
 with col1:
     st.markdown("#### **Tên bài dạy**")
-    ten_bai = st.text_input("Tên bài dạy", placeholder="Ví dụ: Thiết kế mô hình đo chiều cao", label_visibility="collapsed")
+    ten_bai = st.text_input("Tên bài dạy", placeholder="Ví dụ: Chương I : Phương trình và hệ phương trình, Bài 1: Phương trình quy về phương trình bậc nhất một ẩn", label_visibility="collapsed")
     
     st.write("**Hoạt động cần soạn:**")
     hd1 = st.checkbox("HĐ 1: Xác định vấn đề", value=True)
@@ -59,7 +66,7 @@ with col1:
 
 with col2:
     st.markdown("#### **Kiến thức nền**")
-    kien_thuc_nen = st.text_input("Kiến thức nền", placeholder="Ví dụ: Định lý Thales,...", label_visibility="collapsed")
+    kien_thuc_nen = st.text_input("Kiến thức nền", placeholder="Ví dụ: Phương trình tích,...", label_visibility="collapsed")
     st.markdown("#### **Sản phẩm dự kiến**")
     san_pham = st.text_input("Sản phẩm dự kiến", placeholder="Ví dụ: Mô hình cây,...", label_visibility="collapsed")
     st.markdown("#### **Yêu cầu khác**")
@@ -112,11 +119,25 @@ if st.button("🔥 TẠO PROMPT VÀ LIÊN KẾT AI"):
 
     # Tổng hợp toàn bộ Prompt
     full_prompt = f"""
-Với vai trò là chuyên gia về giáo dục bạn hãy soạn giáo án STEM cho {khoi_lop} theo Công văn 3089/BGDĐT-GDTrH.
-TÊN BÀI DẠY: {ten_bai.upper()}
-CHU TRÌNH: {chu_trinh}
-THỜI LƯỢNG: {thoi_luong}
+Bạn hãy đóng vai là một chuyên gia giáo dục STEAM giàu kinh nghiệm. Hãy thiết kế cho tôi một kế hoạch bài dạy (giáo án) theo hướng dẫn công văn 3089 của bộ GD&ĐT về dạy học STEM: 
+Cấu trúc bài dạy theo 5 hoạt động , cụ thể:
 
+Hoạt động 1: Xác định vấn đề: Giao nhiệm vụ thiết kế, xác định các tiêu chí (Criteria) và giới hạn (Constraints) của sản phẩm.
+
+Hoạt động 2: Nghiên cứu kiến thức nền (Soạn thảo bản thiết kế): Học sinh học kiến thức mới liên quan và đề xuất giải pháp, vẽ bản thiết kế,, phần kiến thứ nền cần cho thêm các bài tập để học sinh củng cố kiến thức.
+
+Hoạt động 3: Trình bày và thảo luận bản thiết kế: Học sinh giải thích lý do chọn giải pháp, giáo viên và bạn bè góp ý.
+
+Hoạt động 4: Chế tạo mẫu, thử nghiệm và đánh giá: Học sinh thực hành chế tạo, thử vận hành và đo lường kết quả.
+
+Hoạt động 5: Chia sẻ, thảo luận và điều chỉnh: Trình bày sản phẩm cuối cùng, phân tích nguyên nhân thành công/thất bại và đề xuất hướng cải tiến.Với vai trò là chuyên gia về giáo dục, nắm rõ và phân biệt quy trình dạy học stem theo bạn hãy soạn giáo án STEM cho {khoi_lop} theo Công văn 3089/BGDĐT-GDTrH.
+THiết kế  cho chủ đề: {ten_bai.upper()} với sản phẩm {san_pham}.
+ Bài dạy phải dành cho đối tượng học sinh lớp {khoi_lop}, thời lượng {thoi_luong}.
+
+Yêu cầu bắt buộc:
+
+Áp dụng Quy trình {chu_trinh} vào các hoạt động.
+Nội dung chi tiết bao gồm các phần sau:
 {prompt_muc_tieu}
 
 KIẾN THỨC NỀN: {kien_thuc_nen}
