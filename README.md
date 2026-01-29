@@ -1,19 +1,28 @@
-# 🎈 Blank app template
+import streamlit as st
+import urllib.parse
 
-A simple Streamlit app template for you to modify!
+def create_gemini_link(prompt_text):
+    # Mã hóa nội dung prompt để đưa vào URL
+    encoded_prompt = urllib.parse.quote(prompt_text)
+    base_url = "https://gemini.google.com/app?prompt="
+    return f"{base_url}{encoded_prompt}"
 
-[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://blank-app-template.streamlit.app/)
+# --- Giao diện Streamlit ---
+st.title("🚀 Trình tạo Link Prompt Gemini")
 
-### How to run it on your own machine
+# Ô nhập liệu cho người dùng
+user_prompt = st.text_area("Nhập nội dung prompt bạn muốn mẫu:", 
+                           "Hãy đóng vai một chuyên gia Marketing và viết kế hoạch nội dung cho sản phẩm mới của tôi.")
 
-1. Install the requirements
+if user_prompt:
+    # Tạo đường link
+    final_link = create_gemini_link(user_prompt)
+    
+    st.info("Khi nhấn nút dưới đây, Gemini sẽ mở ra và điền sẵn nội dung của bạn.")
+    
+    # Tạo nút bấm mở link
+    st.link_button("Mở trong Gemini ✨", final_link)
 
-   ```
-   $ pip install -r requirements.txt
-   ```
-
-2. Run the app
-
-   ```
-   $ streamlit run streamlit_app.py
-   ```
+    # Hiển thị link thô nếu cần (tùy chọn)
+    with st.expander("Xem URL chi tiết"):
+        st.code(final_link)
