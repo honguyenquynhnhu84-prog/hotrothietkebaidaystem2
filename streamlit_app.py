@@ -14,26 +14,33 @@ st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 # Cấu hình trang
 st.set_page_config(page_title="STEM Lesson Plan Generator", layout="wide")
 
-st.title("🛠️ Chương trình hỗ trợ tạo Prompt thiết kế bài học STEM (CV 3089)")
+st.title("🛠️ Chương trình hỗ trợ tạo Prompt thiết kế bài học STEM ")
 st.info("Ứng dụng hỗ trợ giáo viên soạn thảo kế hoạch bài dạy STEM theo chuẩn Bộ GD&ĐT.")
 
-# --- SIDEBAR: THÔNG SỐ CHUNG ---
-with st.sidebar:
-    st.header("⚙️ Cấu hình chung")
-    khoi_lop = st.selectbox("Chọn khối lớp", ["Lớp 6", "Lớp 7", "Lớp 8", "Lớp 9"])
-    chu_trinh = st.selectbox("Chu trình dạy học", ["Chu trình Kỹ thuật (EDP)", "Chu trình Khoa học"])
-    thoi_luong = st.radio("Thời lượng bài học", ["1 tiết (45 phút)", "2 tiết (90 phút)"])
-    
-    st.header("📄 Tùy chọn nâng cao")
-    goi_y_vat_lieu = st.checkbox("Gợi ý vật liệu tái chế")
-    phu_luc = st.checkbox("Phụ lục (Phiếu học tập & Rubric)")
-    xuat_word = st.checkbox("Yêu cầu định dạng Word chuẩn")
+# --- CẤU HÌNH CHUNG ---
+st.header("⚙️ Cấu hình chung")
+config_col1, config_col2, config_col3 = st.columns(3)
 
-# --- MAIN: NỘI DUNG CHI TIẾT ---
+with config_col1:
+    st.markdown("#### **Chọn khối lớp**")
+    khoi_lop = st.selectbox("Chọn khối lớp", ["Lớp 6", "Lớp 7", "Lớp 8", "Lớp 9"], label_visibility="collapsed")
+
+with config_col2:
+    st.markdown("#### **Chu trình dạy học**")
+    chu_trinh = st.selectbox("Chu trình dạy học", ["Chu trình Kỹ thuật (EDP)", "Chu trình Khoa học"], label_visibility="collapsed")
+
+with config_col3:
+    st.markdown("#### **Thời lượng bài học**")
+    thoi_luong = st.radio("Thời lượng bài học", ["1 tiết (45 phút)", "2 tiết (90 phút)"], label_visibility="collapsed")
+
+st.divider()
+
+# --- NỘI DUNG CHI TIẾT ---
 col1, col2 = st.columns([1, 1])
 
 with col1:
-    ten_bai = st.text_input("Tên bài dạy", placeholder="Ví dụ: Thiết kế mô hình đo chiều cao")
+    st.markdown("#### **Tên bài dạy**")
+    ten_bai = st.text_input("Tên bài dạy", placeholder="Ví dụ: Thiết kế mô hình đo chiều cao", label_visibility="collapsed")
     
     st.write("**Hoạt động cần soạn:**")
     hd1 = st.checkbox("HĐ 1: Xác định vấn đề", value=True)
@@ -51,12 +58,37 @@ with col1:
     if hd5: hd_chon.append("HĐ 5: Đánh giá")
 
 with col2:
-    kien_thuc_nen = st.text_input("Kiến thức nền (Ví dụ: Định lý Thales,...)")
-    san_pham = st.text_input("Sản phẩm dự kiến (Ví dụ: Mô hình cây,...)")
-    yeu_cau_khac = st.text_area("Yêu cầu khác (nếu có)")
+    st.markdown("#### **Kiến thức nền**")
+    kien_thuc_nen = st.text_input("Kiến thức nền", placeholder="Ví dụ: Định lý Thales,...", label_visibility="collapsed")
+    st.markdown("#### **Sản phẩm dự kiến**")
+    san_pham = st.text_input("Sản phẩm dự kiến", placeholder="Ví dụ: Mô hình cây,...", label_visibility="collapsed")
+    st.markdown("#### **Yêu cầu khác**")
+    yeu_cau_khac = st.text_area("Yêu cầu khác", placeholder="(nếu có)", label_visibility="collapsed")
+
+st.divider()
+
+# --- TÙY CHỌN NÂNG CAO ---
+st.header("📄 Tùy chọn nâng cao")
+option_col1, option_col2, option_col3 = st.columns(3)
+
+with option_col1:
+    goi_y_vat_lieu = st.checkbox("Gợi ý vật liệu tái chế")
+
+with option_col2:
+    phu_luc = st.checkbox("Phụ lục (Phiếu học tập & Rubric)")
+
+with option_col3:
+    xuat_word = st.checkbox("Yêu cầu định dạng Word chuẩn")
+
+st.divider()
 
 # --- LOGIC TẠO PROMPT ---
 if st.button("🔥 TẠO PROMPT VÀ LIÊN KẾT AI"):
+    # Kiểm tra tên bài dạy
+    if not ten_bai or ten_bai.strip() == "":
+        st.error("⚠️ Vui lòng nhập tên bài dạy trước khi tạo prompt!")
+        st.stop()
+    
     # Xây dựng phần mục tiêu
     prompt_muc_tieu = """
     Mục tiêu bài học: Nêu rõ về kiến thức (Toán học là trọng tâm), kĩ năng, thái độ và năng lực đặc thù (năng lực giải quyết vấn đề, năng lực mô hình hóa toán học), năng lực số.
